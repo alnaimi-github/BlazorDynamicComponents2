@@ -1,0 +1,74 @@
+﻿@page "/counter"
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12 mb-4 text-danger fw-bold">
+            My Cart [ @CartQuantity ]
+        </div>
+        <CascadingValue Value="ProductState">
+            <DynamicComponent Type="typeof(ChildComponent)" Parameters="@(new Dictionary<string, object>(){{"Products", Products}})"></DynamicComponent>
+        </CascadingValue>
+
+    </div>
+</div>
+
+
+@code {
+    public ProductState ProductState { get; set; } = new();
+    private List<Product> Products { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+
+        ProductState.ActionWithProduct = HandleAddToCartClicked;
+    }
+    private static List<Product> MyCartItems { get; set; } = new();
+    private void HandleAddToCartClicked(Dictionary<string, object> cartItemInDictionary)
+    {
+        MyCartItems.Add((Product)cartItemInDictionary.Values.FirstOrDefault()!);
+        CartQuantity = MyCartItems.Count;
+        StateHasChanged();
+    }
+
+    private Product MyCartItem { get; set; } = new();
+    private int CartQuantity;
+
+    private async Task LoadData()
+    {
+        CartQuantity = MyCartItems.Count;
+        Products = new List<Product>()
+            {
+            new Product(){
+                Id =1,
+                Name = "Tote Bag",
+                Description="A tote bag is a large bag than a hobo and satchel type bag. It has enough space to fit many things in it. It is also considered a large bag to carry as a shopping bag.",
+                Image = "bag1.jpg"},
+            new Product(){
+                Id =2,
+                Name = "Satchel Bag",
+                Description="A Satchel bag is a rectangular leather bag that features a top handle that can be used as a handbag and a long shoulder strap. The Satchel bag is flat from the bottom. Satchel also features a flip cover.",
+                Image = "bag2.jpg"},
+            new Product(){
+                Id =3,
+                Name = "Hobo Bag",
+                Description="A hobo bag is a crescent-shaped bag and features a long strap that designed to be worn over the shoulder, not like a satchel bag where a satchel bag is worn around the shoulder.",
+                Image = "bag3.jpg"},
+            new Product(){
+                Id =4,
+                Name = "Straw Tote Bag",
+                Description="A straw tote bag is a tote type bag made of straws and canvas. In past, people were using this type of bag for shopping and as well to fit essential things",
+                Image = "bag4.jpg"},
+            new Product(){
+                Id =5,
+                Name = "Clutch Bag",
+                Description="Clutch is designed to be carried without straps and can only be worn around under your arms or can be carried with hands thus we included clutch bags in our list of types of handbags and their names",
+                Image = "bag5.jpg"},
+            new Product(){
+                Id =6,
+                Name = "Pouch Bag",
+                Description="A pouch is a type of handbag that features a zipper on top of the pouch bag. It is one of the best ways to store your credit card, makeup items, and other essential things.You will find a pouch with short straps that can be worn around the wrist that’s why pouch is being used by many nowadays.",
+                Image = "bag6.jpg"},
+        };
+    }
+}

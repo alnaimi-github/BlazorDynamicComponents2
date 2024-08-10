@@ -1,0 +1,33 @@
+﻿@if (Products.Count > 0)
+{
+    foreach (var item in Products.OrderByDescending(_=>_.Id))
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header">@item.Name</div>
+
+                <div class="card-body">
+                    <img class="card-img-top" src="../images/@item.Image" height="250" />
+                    @item.Description
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger" @onclick="()=> AddToCart(item)">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
+
+@code {
+    [Parameter] public List<Product> Products { get; set; } = new();
+
+    [CascadingParameter] public ProductState ProductState { get; set; } = new();
+    private void AddToCart(Product cartItem)
+    {
+        var itemSelectedInDictionary = new Dictionary<string, object>() { { "MyCartItem", cartItem } };
+        ProductState.ActionWithProduct?.Invoke(itemSelectedInDictionary);
+    }
+}

@@ -1,0 +1,22 @@
+﻿@page "/fetchdata"
+
+@if (Products.Any())
+{
+    foreach (var item in Products)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header">@item.Name</div>
+
+                <div class="card-body">
+                    <img class="card-img-top" src="../images/@item.Image" height="250" />
+                    @item.Description
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter] public List<Product> Products { get; set; } = new();
+}
